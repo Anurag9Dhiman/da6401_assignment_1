@@ -80,7 +80,7 @@ def parse_arguments():
     parser.add_argument('-wi', '--weight_init', type=str, choices=['random', 'xavier', 'zeros'], default='xavier')
     parser.add_argument('-wp', '--wandb_project', type=str, default='da6401_assignment_1')
     parser.add_argument('-we', '--wandb_entity', type=str, default=None)
-    parser.add_argument('--no_wandb', action='store_true', default=False)
+    parser.add_argument('--no_wandb', action='store_true', default=True)
     parser.add_argument('--val_split', type=float, default=0.1)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--save_dir', type=str, default='src/')

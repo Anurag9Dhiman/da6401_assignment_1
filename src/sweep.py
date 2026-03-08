@@ -41,7 +41,9 @@ def sweep_train():
         no_wandb=False, # We want it to log to the sweep run
         val_split=0.1,
         seed=42,
-        save_dir='src/'
+        save_dir='src/',
+        model_path='src/best_model.npy',
+        config_path='src/best_config.json'
     )
     
     train(args)
