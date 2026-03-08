@@ -1,0 +1,11 @@
+{
+    "input_size": 784,
+    "hidden_sizes": [
+        128,
+        128,
+        128
+    ],
+    "num_classes": 10,
+    "activation": "tanh",
+    "weight_init": "xavier"
+}

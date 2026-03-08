@@ -1,0 +1,5 @@
+numpy
+matplotlib
+wandb
+scikit-learn
+tensorflow # for keras.datasets
