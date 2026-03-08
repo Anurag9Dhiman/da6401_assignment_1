@@ -77,6 +77,7 @@ class NeuralNetwork:
     def __setattr__(self, name, value):
         """
         Pushes Wi, bi values into layer.W, layer.b.
+        Invalidates _probs cache for backward safety.
         """
         if (name.startswith('W') or name.startswith('b')) and name[1:].isdigit():
             idx = int(name[1:]) - 1
@@ -85,6 +86,8 @@ class NeuralNetwork:
                     self.layers[idx].W = value
                 else:
                     self.layers[idx].b = value
+                # Invalidate cache so next backward recomputes forward
+                object.__setattr__(self, '_probs', None)
                 return
         super().__setattr__(name, value)
 
@@ -108,9 +111,10 @@ class NeuralNetwork:
         """
         Backward pass.
         Returns (dW_list, db_list) from last-layer to first-layer.
-        Always recomputes forward pass to ensure _probs are fresh for gradient calculation.
+        Recomputes forward ONLY if cache is empty.
         """
-        self.forward(X)  # always recompute — never use stale _probs
+        if self._probs is None:
+            self.forward(X)
             
         if loss == 'cross_entropy':
             delta = self._probs - y
