@@ -8,7 +8,7 @@
 
 ## How to Train
 ```bash
-python src/train.py -d mnist -e 15 -b 64 -o rmsprop -lr 0.001 \
+python src/train.py -d fashion_mnist -e 20 -b 64 -o rmsprop -lr 0.001 \
   -nhl 3 -sz 128 128 -a relu -wi xavier -wp da6401_assignment_1
 ```
 
@@ -22,9 +22,9 @@ python src/inference.py --model_path src/best_model.npy --config_path src/best_c
 python src/sweep.py
 ```
 
-## Best Model Configuration
-- Dataset: MNIST
+## Best Model Configuration (Pushed)
+- Dataset: Fashion-MNIST
 - Architecture: 3 hidden layers, 128 neurons each
 - Activation: ReLU
 - Optimizer: RMSProp, lr=0.001
-- Test F1: ~0.98
+- Validation F1: ~0.894
