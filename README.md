@@ -1,7 +1,7 @@
 # DA6401 Assignment 1 — MLP for Image Classification
 
 ## W&B Report
-[Link to public W&B report](https://wandb.ai/anuragdhiman666-indian-institute-of-technology-madras/da6401_assignment_1)
+[Link to public W&B report](https://wandb.ai/anuragdhiman666-indian-institute-of-technology-madras/da6401_assignment_1/reports/da6401_assignment_1--VmlldzoxNjE0MTg3OA?accessToken=xxsrlmtg5rxv7b0b83m4yys3zyuj8koux18jll3lb8kno3i0n2tod31ou94ej9jl)
 
 ## GitHub Repository
 [Link to this repo](https://github.com/Anurag9Dhiman/da6401_assignment_1)
