@@ -105,20 +105,13 @@ class NeuralNetwork:
         """
         Backward pass.
         Returns (dW_list, db_list) from last-layer to first-layer.
+        Always recomputes forward pass to ensure _probs are fresh for gradient calculation.
         """
-        if self._probs is None:
-            self.forward(X)
+        self.forward(X)  # always recompute — never use stale _probs
             
-        # Initial delta: dL/dZ (output layer logits)
-        # For Softmax + CrossEntropy, dL/dZ = probs - y_one_hot
-        # For Softmax + MSE, dL/dZ = (2/N) * probs * ( (probs - y) - sum((probs - y) * probs) )
         if loss == 'cross_entropy':
             delta = self._probs - y
-        elif loss == 'mse':
-            # MSE Gradient for Softmax:
-            # dL/dz = 2 * (p - y) * p * (1 - p) if one-hot y?
-            # Actually for vector probs: dL/dz = 2 * (p - y) @ (diag(p) - p p^T)
-            # Efficient form: delta = 2 * probs * ( (probs - y) - sum((probs - y) * probs, axis=1, keepdims=True) )
+        elif loss in ('mse', 'mean_squared_error'):
             diff = self._probs - y
             dot_diff_probs = np.sum(diff * self._probs, axis=1, keepdims=True)
             delta = 2.0 * self._probs * (diff - dot_diff_probs)

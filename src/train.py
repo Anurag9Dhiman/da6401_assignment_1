@@ -161,6 +161,7 @@ def train(args):
     best_model_path = os.path.join(args.save_dir, 'best_model.npy')
     best_config_path = os.path.join(args.save_dir, 'best_config.json')
     
+    best_weights['_config']['dataset'] = args.dataset
     np.save(best_model_path, best_weights)
     with open(best_config_path, 'w') as f:
         json.dump(best_weights['_config'], f, indent=4)
