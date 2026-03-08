@@ -57,16 +57,16 @@ class NeuralLayer:
         We then compute dL/dZ = dL/dA * f'(Z).
         If it's the output layer, delta passed is usually dL/dZ (logits delta).
         """
-        # If hidden layer with activation
         if self.activation_grad_func:
             dz = delta * self.activation_grad_func(self._Z)
         else:
             # Output layer (linear)
             dz = delta
             
-        N = self._X.shape[0]
+        X_2d = self._X.reshape(1, -1) if self._X.ndim == 1 else self._X
+        N = X_2d.shape[0]
         
-        self.grad_W = np.dot(self._X.T, dz) / N
+        self.grad_W = np.dot(X_2d.T, dz) / N
         if weight_decay > 0.0:
             self.grad_W += weight_decay * self.W
             

@@ -92,6 +92,9 @@ class NeuralNetwork:
         """
         Forward pass returning logits.
         """
+        if X.ndim == 1:
+            X = X.reshape(1, -1)
+            
         curr_a = X
         for layer in self.layers:
             curr_a = layer.forward(curr_a)

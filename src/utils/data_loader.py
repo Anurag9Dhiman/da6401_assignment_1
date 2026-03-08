@@ -1,32 +1,24 @@
-import ssl
 import numpy as np
-ssl._create_default_https_context = ssl._create_unverified_context
-from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 
 def load_dataset(name):
     """
     Loads raw dataset.
-    Uses sklearn.datasets.fetch_openml to avoid Keras mutex issues on Mac.
+    Uses keras.datasets to avoid internet dependency (autograder compatibility).
     Returns: X_train, y_train, X_test, y_test as raw uint8.
     """
-    print(f"Loading dataset {name} via fetch_openml...")
+    print(f"Loading dataset {name}...")
     if name.lower() == 'mnist':
-        X, y = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False, parser='liac-arff')
+        from tensorflow.keras.datasets import mnist
+        (X_train, y_train), (X_test, y_test) = mnist.load_data()
     elif name.lower() == 'fashion_mnist':
-        X, y = fetch_openml('Fashion-MNIST', version=1, return_X_y=True, as_frame=False, parser='liac-arff')
+        from tensorflow.keras.datasets import fashion_mnist
+        (X_train, y_train), (X_test, y_test) = fashion_mnist.load_data()
     else:
         raise ValueError(f"Unknown dataset: {name}")
         
-    y = y.astype(int)
-    # Split manually to control raw output format (N, 28, 28)
-    # OpenML returns (70000, 784). We split into 60k/10k.
-    X_tr_raw = X[:60000].reshape(-1, 28, 28).astype(np.uint8)
-    y_tr_raw = y[:60000].astype(np.uint8)
-    X_te_raw = X[60000:].reshape(-1, 28, 28).astype(np.uint8)
-    y_te_raw = y[60000:].astype(np.uint8)
-    
-    return X_tr_raw, y_tr_raw, X_te_raw, y_te_raw
+    # X shape: (N, 28, 28) uint8 - matches expected return format
+    return X_train, y_train, X_test, y_test
 
 def to_one_hot(y, num_classes=10):
     oh = np.zeros((y.size, num_classes))
