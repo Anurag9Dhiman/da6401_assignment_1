@@ -1,10 +1,10 @@
 # DA6401 Assignment 1 — MLP for Image Classification
 
 ## W&B Report
-[Link to public W&B report](https://wandb.ai/YOUR_ENTITY/da6401_assignment_1/reports/...)
+[Link to public W&B report](https://wandb.ai/anuragdhiman666-indian-institute-of-technology-madras/da6401_assignment_1)
 
 ## GitHub Repository
-[Link to this repo](https://github.com/YOUR_USERNAME/da6401_assignment_1)
+[Link to this repo](https://github.com/Anurag9Dhiman/da6401_assignment_1)
 
 ## How to Train
 ```bash
