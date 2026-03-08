@@ -177,9 +177,10 @@ class NeuralNetwork:
         Returns gradient norms for specific neurons in a layer.
         grad_W is (in, out). Neuron idx refers to 'out' dimension.
         """
+        if layer_idx >= len(self.layers):
+            return np.array([])
         layer = self.layers[layer_idx]
         grad_w = layer.grad_W
-        neuron_norms = []
-        for j in neuron_indices:
-            neuron_norms.append(np.linalg.norm(grad_w[:, j]))
-        return neuron_norms
+        max_idx = grad_w.shape[1]
+        safe_idxs = [int(i) for i in neuron_indices if int(i) < max_idx]
+        return np.array([np.linalg.norm(grad_w[:, j]) for j in safe_idxs])

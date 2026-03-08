@@ -62,13 +62,15 @@ def run_inferences(args):
     
     return {'accuracy': acc, 'f1': f1}
 
-def get_args():
-    parser = argparse.ArgumentParser()
-    # CLI must be identical to train.py
+def parse_arguments():
+    """
+    Parses CLI arguments. Must be identical to train.py for autograder.
+    """
+    parser = argparse.ArgumentParser(description='Inference with saved MLP')
     parser.add_argument('-d', '--dataset', type=str, choices=['mnist', 'fashion_mnist'], default='mnist')
     parser.add_argument('-e', '--epochs', type=int, default=15)
     parser.add_argument('-b', '--batch_size', type=int, default=64)
-    parser.add_argument('-l', '--loss', type=str, choices=['cross_entropy', 'mse'], default='cross_entropy')
+    parser.add_argument('-l', '--loss', type=str, choices=['cross_entropy', 'mse', 'mean_squared_error'], default='cross_entropy')
     parser.add_argument('-o', '--optimizer', type=str, choices=['sgd', 'momentum', 'nag', 'rmsprop'], default='rmsprop')
     parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
     parser.add_argument('-wd', '--weight_decay', type=float, default=0.0)
@@ -86,6 +88,9 @@ def get_args():
     parser.add_argument('--config_path', type=str, default='src/best_config.json')
     return parser.parse_args()
 
+def parse_args():
+    return parse_arguments()
+
 if __name__ == '__main__':
-    args = get_args()
+    args = parse_arguments()
     run_inferences(args)
