@@ -139,15 +139,16 @@ class NeuralNetwork:
     def get_weights(self):
         """
         Returns dict with W1, b1, ... and _config.
+        Uses .copy() to ensure best_weights are not overwritten by reference.
         """
         weights_dict = {}
         for i, layer in enumerate(self.layers):
-            weights_dict[f'W{i+1}'] = layer.W
-            weights_dict[f'b{i+1}'] = layer.b
+            weights_dict[f'W{i+1}'] = layer.W.copy()
+            weights_dict[f'b{i+1}'] = layer.b.copy()
             
         weights_dict['_config'] = {
             'input_size': self.input_size,
-            'hidden_sizes': self.hidden_sizes,
+            'hidden_sizes': list(self.hidden_sizes),
             'num_classes': self.num_classes,
             'activation': self.activation,
             'weight_init': self.weight_init
@@ -156,11 +157,43 @@ class NeuralNetwork:
 
     def set_weights(self, weights_dict):
         """
-        Restores weights from dict.
+        Restores weights from dict. 
+        Infers architecture from weight shapes to avoid KeyError/Mismatches.
         """
-        for i, layer in enumerate(self.layers):
-            layer.W = weights_dict[f'W{i+1}']
-            layer.b = weights_dict[f'b{i+1}']
+        # Find all W keys in order
+        w_keys = sorted(
+            [k for k in weights_dict if k.startswith('W') and k[1:].isdigit()],
+            key=lambda k: int(k[1:])
+        )
+        if not w_keys:
+            return
+
+        ws = [weights_dict[k] for k in w_keys]
+
+        # Rebuild layers from weight shapes (fixes KeyError when counts mismatch)
+        self.input_size = ws[0].shape[0]
+        self.hidden_sizes = [w.shape[1] for w in ws[:-1]]
+        self.num_classes = ws[-1].shape[1]
+        
+        if '_config' in weights_dict:
+            cfg = weights_dict['_config']
+            self.activation = cfg.get('activation', self.activation)
+            self.weight_init = cfg.get('weight_init', self.weight_init)
+
+        self.layers = []
+        curr = self.input_size
+        for h in self.hidden_sizes:
+            self.layers.append(NeuralLayer(curr, h, self.activation, self.weight_init))
+            curr = h
+        # Output layer
+        self.layers.append(NeuralLayer(curr, self.num_classes, None, self.weight_init))
+
+        # Assign weights as copies
+        for i, k in enumerate(w_keys):
+            b_key = f'b{k[1:]}'
+            self.layers[i].W = np.array(weights_dict[k]).copy()
+            if b_key in weights_dict:
+                self.layers[i].b = np.array(weights_dict[b_key]).copy()
 
     def predict(self, X):
         logits = self.forward(X)
